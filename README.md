@@ -84,5 +84,188 @@ La ruta blackhole descarta el tráfico en vez de dejarlo salir sin cifrar por la
 ## Archivos
 
 - `running-configs/` — configuraciones de cada equipo
-- `scripts/setup-webserver.sh` — instalación de Apache con HTTPS
+
+## Running-configs
+
+<details>
+<summary><b>ISP</b></summary>
+
+```
+ISP#show running-config
+Building configuration...
+
+Current configuration : 1378 bytes
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname ISP
+!
+boot-start-marker
+boot-end-marker
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+redundancy
+!
+interface Loopback0
+ description Simula Internet
+ ip address 8.8.8.8 255.255.255.255
+!
+interface Ethernet0/0
+ description Enlace hacia FG-USER port1
+ ip address 20.24.23.1 255.255.255.252
+!
+interface Ethernet0/1
+ description Enlace hacia FG-Server port1
+ ip address 20.24.56.1 255.255.255.252
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+control-plane
+!
+banner motd ^CISP - Laboratorio VPN Site-to-Site - Matricula 2024-2356^C
+!
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+end
+```
+
+</details>
+
+<details>
+<summary><b>SW-Usuarios</b></summary>
+
+```
+SW-Usuarios#show running-config
+Building configuration...
+
+Current configuration : 1149 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW-Usuarios
+!
+boot-start-marker
+boot-end-marker
+!
+no aaa new-model
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+interface Ethernet0/0
+ description Trunk hacia FG-USER port2
+ switchport trunk allowed vlan 10
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/1
+ description Access hacia PC-Usuario
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface Ethernet0/2
+ description No usado
+ shutdown
+!
+interface Ethernet0/3
+ description No usado
+ shutdown
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+control-plane
+!
+banner motd ^CSW-Usuarios - Laboratorio VPN - Matricula 2024-2356^C
+!
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+end
+```
+
+</details>
+
+<details>
+<summary><b>FG-USER</b></summary>
+
+```
+PEGAR AQUÍ LA SALIDA DE "show" DEL FG-USER
+```
+
+</details>
+
+<details>
+<summary><b>FG-Server</b></summary>
+
+```
+PEGAR AQUÍ LA SALIDA DE "show" DEL FG-SERVER
+```
+
+</details>
+
 - `documentacion/` — informe completo en PDF
